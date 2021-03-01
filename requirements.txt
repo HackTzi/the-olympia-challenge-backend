@@ -1,0 +1,11 @@
+Django==3.1.7
+psycopg2-binary
+python-decouple
+djangorestframework
+djangorestframework_simplejwt
+markdown
+django-filter
+Pillow
+django-nested-inline
+drf-yasg
+django-cors-headers
