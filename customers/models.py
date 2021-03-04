@@ -17,6 +17,12 @@ class Currency(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name_plural = 'currencies'
+
+    def __str__(self):
+        return f'{self.name} [{self.abbreviation}]'
+
 
 class Country(models.Model):
     """Country Model"""
@@ -26,6 +32,9 @@ class Country(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = 'countries'
 
 
 class Customer(models.Model):
@@ -92,3 +101,12 @@ class ShippingAddress(models.Model):
 
     def __str__(self):
         return self.address
+
+
+class Notification(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    content = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)

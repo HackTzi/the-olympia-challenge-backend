@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{{ title }} | {% trans "ConnectCare" %}{% endblock %}
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}"/>
+{% endblock %}
+{% block branding %}
+    <h1>Jipeek Store Manager</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
