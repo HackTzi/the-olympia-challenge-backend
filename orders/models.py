@@ -23,18 +23,6 @@ class Order(models.Model):
     shipping_price = models.FloatField()
     tax_price = models.FloatField()
 
-    CHOICES_STATUS = [
-        ('awaiting_payment', 'Awaiting payment'),
-        ('preparing_shipment', 'milestones'),
-        ('on_the_way', 'On the way'),
-        ('no_delivery_confirmation', 'No delivery confirmation'),
-        ('delivery_refused', 'Delivery refused'),
-        ('delivered', 'Delivered'),
-    ]
-
-    status = models.CharField(max_length=30, choices=CHOICES_STATUS)
-    milestones = models.JSONField()
-
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -50,3 +38,22 @@ class ProductOrder(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class OrderTracking(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    CHOICES_TYPE = [
+        ('awaiting_payment', 'Awaiting payment'),
+        ('preparing_shipment', 'milestones'),
+        ('on_the_way', 'On the way'),
+        ('no_delivery_confirmation', 'No delivery confirmation'),
+        ('delivery_refused', 'Delivery refused'),
+        ('delivered', 'Delivered'),
+    ]
+
+    type = models.CharField(max_length=30, choices=CHOICES_TYPE)
+    observations = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)

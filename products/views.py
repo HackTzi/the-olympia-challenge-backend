@@ -20,19 +20,19 @@ class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
                       viewsets.GenericViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
+    search_fields = ['name_es', 'name_en']
 
 
 class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
                      viewsets.GenericViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['category', 'price', 'free_delivery', 'ranking']
-    search_fields = ['sku', 'name', 'category', ]
+    search_fields = ['sku', 'name_es', 'name_en', 'category']
 
     @action(detail=True, methods=['post', 'get'])
     def reviews(self, request, pk=None):
@@ -96,7 +96,7 @@ class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
 
 
 class CouponCheckView(views.APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, pk, format=None):
         try:
@@ -113,7 +113,7 @@ class CouponCheckView(views.APIView):
 class CollectionViewSet(viewsets.ModelViewSet):
     queryset = Collection.objects.all()
     serializer_class = CollectionSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['customer', 'likes']
     search_fields = ['customer__user__first_name', 'customer__user__last_name',
