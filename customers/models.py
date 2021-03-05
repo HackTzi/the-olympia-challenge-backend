@@ -36,6 +36,9 @@ class Country(models.Model):
     class Meta:
         verbose_name_plural = 'countries'
 
+    def __str__(self):
+        return self.name
+
 
 class Customer(models.Model):
     """Customer model"""
@@ -106,6 +109,16 @@ class ShippingAddress(models.Model):
 class Notification(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     content = models.TextField()
+
+    CHOICES_TYPE = [
+        ('purchase_status', 'Purchase status'),
+        ('promotions', 'Promotions'),
+        ('new_products', 'New products'),
+        ('new_coupons', 'New coupons'),
+        ('new_setups', 'New setups'),
+    ]
+
+    type = models.CharField(max_length=70, choices=CHOICES_TYPE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

@@ -7,11 +7,11 @@ from rest_framework.response import Response
 
 # Models
 from django.contrib.auth.models import User
-from customers.models import Customer, ShippingAddress, Currency, Country
+from customers.models import Customer, ShippingAddress, Currency, Country, Notification
 
 # Serializers
 from customers.serializers import (CustomerSerializer, ShippingAddressSerializer, UserSerializer,
-                                   CurrencySerializer, CountrySerializer)
+                                   CurrencySerializer, CountrySerializer, NotificationSerializer)
 
 
 class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
@@ -40,6 +40,21 @@ class CustomerViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
         serializer(self.get_object())
 
         return Response(serializer.data)
+
+    @action(methods=['post', 'get'], detail=True)
+    def notification(self, request, pk=None):
+        if request.method == 'POST':
+            serializer = NotificationSerializer(request.data)
+            serializer.is_valid(raise_exception=True)
+
+            serializer.create(serializer.validated_data)
+            return serializer.data
+
+        elif request.method == 'GET':
+            notifications = Notification.objects.filter(customer=pk)
+
+            serializer = NotificationSerializer(notifications, many=True)
+            return serializer.data
 
 
 class ShippingAddressViewSet(viewsets.ModelViewSet):

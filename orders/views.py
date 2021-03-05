@@ -10,7 +10,7 @@ from orders.models import Order
 from orders.serializers import OrderSerializer
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)

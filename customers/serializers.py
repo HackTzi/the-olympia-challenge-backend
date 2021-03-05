@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 # Models
 from django.contrib.auth.models import User
-from customers.models import Customer, ShippingAddress, Currency, Country
+from customers.models import Customer, ShippingAddress, Currency, Country, Notification
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,7 +30,7 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShippingAddress
         fields = ('customer', 'country', 'address', 'city', 'state', 'zip_code',
-                  'created_at', 'modified_at', 'author',)
+                  'created_at', 'modified_at', 'au<thor',)
         read_only_fields = ('author', 'created_at', 'modified_at')
 
 
@@ -52,5 +52,16 @@ class CountrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Country
-        fields = ('name', 'tax_rate', 'created_at', 'modified_at', 'author')
+        fields = ('id', 'name', 'tax_rate', 'created_at', 'modified_at', 'author')
+        read_only_fields = ('author', 'created_at', 'modified_at')
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    author = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = Notification
+        fields = ('customer', 'content', 'type', 'created_at', 'modified_at', 'author')
         read_only_fields = ('author', 'created_at', 'modified_at')

@@ -52,9 +52,9 @@ Go to the terminal and execute the next command
     sudo su - postgres
     psql
     \password postgres #pick a password for the postgres role
-    CREATE DATABASE connectcare;
+    CREATE DATABASE jipeek;
     ```
-4. Configure database into connectcare/settings.ini
+4. Configure database into techstore/settings.ini
     ```
     [settings]
     SECRET_KEY=<your_secret_key>
@@ -75,7 +75,7 @@ You can install the docker using the following guides:
 - [Intall docker engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/ "Install docker engine on Ubuntu")
 - [Intall docker-compose](https://docs.docker.com/compose/install/)
 
-### Configure database into connectcare/settings.py
+### Configure database into techstore/settings.ini
 ```
 [settings]
     SECRET_KEY=<your_secret_key>

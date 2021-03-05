@@ -15,6 +15,7 @@ from drf_yasg import openapi
 # Views
 from products import views as products_views
 from customers import views as customers_views
+from orders import views as orders_views
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -31,8 +32,10 @@ router = routers.DefaultRouter()
 router.register(r'categories', products_views.CategoryViewSet)
 router.register(r'products', products_views.ProductViewSet)
 router.register(r'customers', customers_views.CustomerViewSet)
+router.register(r'shipping_address', customers_views.ShippingAddressViewSet)
 router.register(r'users', customers_views.UserViewSet)
 router.register(r'collections', products_views.CollectionViewSet)
+router.register(r'orders', orders_views.OrderViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
