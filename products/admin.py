@@ -12,11 +12,10 @@ from products.models import Product, Category, ProductVariation, ProductGallery
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name_en', 'description_en', 'created_at',
-                    'modified_at', 'author')
-    list_display_links = ('name_en', 'description_en',)
-    search_fields = ('name',)
-    readonly_fields = ('author', 'created_at', 'modified_at')
+    list_display = ('name_en', 'created_at', 'modified_at', 'author')
+    list_display_links = ('name_en',)
+    search_fields = ('name_en', 'name_es')
+    readonly_fields = ('created_at', 'modified_at')
 
     def save_model(self, request, obj, form, change):
         if getattr(obj, 'author', None) is None:
@@ -45,7 +44,7 @@ class ProductAdmin(NestedModelAdmin):
     list_display_links = ('sku', 'name_en', 'price', 'category', 'ranking')
     search_fields = ('sku', 'name_en', 'price', 'category')
     list_filter = ('category',)
-    readonly_fields = ('author', 'created_at', 'modified_at', 'ranking')
+    readonly_fields = ('created_at', 'modified_at', 'ranking')
     list_per_page = 30
 
     inlines = [ProductVariationInline]

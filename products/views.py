@@ -8,12 +8,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 # Models
 from products.models import (Category, Product, ProductComment, ProductReview,
-                             ProductVariation, CustomerProduct, Coupon)
+                             ProductVariation, CustomerProduct, Coupon, Collection)
 from customers.models import Customer
 
 # Serializers
-from products.serializers import CategorySerializer, ProductCommentSerializer, ProductSerializer, \
-    ProductReviewSerializer, ProductVariationSerializer
+from products.serializers import (CategorySerializer, ProductCommentSerializer, ProductSerializer,
+                                  ProductReviewSerializer, ProductVariationSerializer, CollectionSerializer)
 
 
 class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
@@ -26,13 +26,13 @@ class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
 
 
 class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
-                      viewsets.GenericViewSet):
+                     viewsets.GenericViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['category', 'price', 'free_delivery', 'ranking']
-    search_fields = ['sku', 'name', 'category',]
+    search_fields = ['sku', 'name', 'category', ]
 
     @action(detail=True, methods=['post', 'get'])
     def reviews(self, request, pk=None):
@@ -41,6 +41,8 @@ class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
             serializer = ProductReviewSerializer(
                 data=request.data, context={'request': request})
             serializer.is_valid(raise_exception=True)
+
+            serializer.create(serializer.validated_data)
             return Response(serializer.data)
 
         elif request.method == 'GET':
@@ -58,6 +60,7 @@ class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
                 data=request.data, context={'request': request})
             serializer.is_valid(raise_exception=True)
 
+            serializer.create(serializer.validated_data)
             return Response(serializer.data)
 
         elif request.method == 'GET':
@@ -69,7 +72,7 @@ class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     @action(detail=True, methods=['get'])
     def variations(self, request, pk=None):
         variations = ProductVariation.objects.filter(product=pk)
-        serializer = ProductVariationSerializer(variations)
+        serializer = ProductVariationSerializer(variations, many=True)
 
         return Response(serializer.data)
 
@@ -105,3 +108,13 @@ class CouponCheckView(views.APIView):
             return Response('The coupon is no valid.')
 
         return Response('The coupon is valid.')
+
+
+class CollectionViewSet(viewsets.ModelViewSet):
+    queryset = Collection.objects.all()
+    serializer_class = CollectionSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['customer', 'likes']
+    search_fields = ['customer__user__first_name', 'customer__user__last_name',
+                     'customer__user__username', 'customer__user__email', ]

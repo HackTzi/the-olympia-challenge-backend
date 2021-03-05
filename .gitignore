@@ -10,7 +10,7 @@ __pycache__/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-media
+media/
 settings.ini
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
@@ -328,5 +328,10 @@ pip-selfcheck.json
 ### vscode ###
 !.vscode/settings.json
 !.vscode/extensions.json
+
+
+### Deploy ###
+.ini
+uwsgi_params
 
 # End of https://www.toptal.com/developers/gitignore/api/python,vscode,visualstudiocode,pycharm+all,django,venv

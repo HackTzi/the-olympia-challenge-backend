@@ -1,21 +1,30 @@
 """Customer views"""
 
 # Django REST Framework
-from rest_framework import viewsets, mixins, exceptions
+from rest_framework import viewsets, mixins, exceptions, generics, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 # Models
-from customers.models import Customer, ShippingAddress
+from django.contrib.auth.models import User
+from customers.models import Customer, ShippingAddress, Currency, Country
 
 # Serializers
-from customers.serializers import CustomerSerializer, ShippingAddressSerializer
+from customers.serializers import (CustomerSerializer, ShippingAddressSerializer, UserSerializer,
+                                   CurrencySerializer, CountrySerializer)
+
+
+class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class CustomerViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
                       mixins.UpdateModelMixin, viewsets.GenericViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+    lookup_field = 'user'
 
     @action(methods=['post'], detail=True)
     def points(self, request):
@@ -38,3 +47,15 @@ class ShippingAddressViewSet(viewsets.ModelViewSet):
     serializer_class = ShippingAddressSerializer
     http_method_names = [u'get', u'post', u'put', u'patch']
     lookup_field = 'customer'
+
+
+class CurrencyListView(generics.ListAPIView):
+    queryset = Currency.objects.all()
+    serializer_class = CurrencySerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+
+class CountryListView(generics.ListAPIView):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+    permission_classes = (permissions.IsAuthenticated,)

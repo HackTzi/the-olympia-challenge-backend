@@ -15,11 +15,8 @@ class Category(models.Model):
     """Category Model"""
     name_es = models.CharField(max_length=50)
     name_en = models.CharField(max_length=50)
-    description_es = models.TextField(null=True, blank=True)
-    description_en = models.TextField(null=True, blank=True)
 
-    icon = models.FileField(upload_to='categories/icons/')
-    picture = models.ImageField(upload_to='categories/pictures/')
+    picture = models.ImageField(upload_to='categories/pictures/', null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -29,7 +26,7 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
 
     def __str__(self):
-        return self.name
+        return self.name_en
 
 
 class Product(models.Model):
@@ -61,7 +58,7 @@ class Product(models.Model):
         return 0
 
     def __str__(self):
-        return self.name
+        return self.name_en
 
 
 class ProductVariation(models.Model):
@@ -69,9 +66,9 @@ class ProductVariation(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField()
 
-    color = models.CharField(max_length=7, null=True)
-    size = models.CharField(max_length=30, null=True)
-    capabilities = models.CharField(max_length=30, null=True)
+    color = models.CharField(max_length=7, null=True, blank=True)
+    size = models.CharField(max_length=30, null=True, blank=True)
+    capabilities = models.CharField(max_length=30, null=True, blank=True)
 
     main = models.BooleanField(default=False)
 
@@ -79,7 +76,7 @@ class ProductVariation(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(f'{self.product} -> variation #{self.id}')
+        return f'{self.product} -> variation #{self.id}' or ''
 
 
 class ProductGallery(models.Model):
@@ -92,7 +89,7 @@ class ProductGallery(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.product_variation
+        return self.product_variation or ''
 
 
 class ProductComment(models.Model):
@@ -148,12 +145,16 @@ class CustomerProduct(models.Model):
         return str(f'{self.customer} -> {self.product}')
 
 
-class Collections(models.Model):
+class Collection(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     picture = models.ImageField(upload_to='collections/pictures/')
 
     products = models.ManyToManyField(Product)
+    likes = models.PositiveIntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.customer} collection #{self.id}'

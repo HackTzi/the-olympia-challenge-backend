@@ -79,7 +79,7 @@ class Customer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='author')
+        User, on_delete=models.CASCADE, related_name='author', null=True)
 
     def __str__(self):
         return self.user.get_full_name()

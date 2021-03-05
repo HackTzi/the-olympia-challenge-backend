@@ -3,10 +3,11 @@
 
 {% block title %}{{ title }} | {% trans "ConnectCare" %}{% endblock %}
 {% block extrastyle %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'Favicon.png' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}"/>
 {% endblock %}
 {% block branding %}
-    <h1>Jipeek Store Manager</h1>
+    <img src="{% static 'logo.svg' %}" width="100px" alt="Logotipo de jippek">
 {% endblock %}
 
 {% block nav-global %}{% endblock %}

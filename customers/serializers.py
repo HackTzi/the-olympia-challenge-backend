@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 # Models
 from django.contrib.auth.models import User
-from customers.models import Customer, ShippingAddress
+from customers.models import Customer, ShippingAddress, Currency, Country
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,16 +15,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=True, read_only=False)
-    author = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-
     class Meta:
         model = Customer
-        fields = ('user', 'picture', 'work_area', 'preferences', 'language',
+        fields = ('id', 'user', 'picture', 'work_area', 'preferences', 'language',
                   'phone_number', 'currency', 'points', 'created_at', 'modified_at', 'author',)
-        read_only_fields = ('points', 'author', 'created_at', 'modified_at')
+        read_only_fields = ('points', 'created_at', 'modified_at')
 
 
 class ShippingAddressSerializer(serializers.ModelSerializer):
@@ -36,4 +31,26 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
         model = ShippingAddress
         fields = ('customer', 'country', 'address', 'city', 'state', 'zip_code',
                   'created_at', 'modified_at', 'author',)
+        read_only_fields = ('author', 'created_at', 'modified_at')
+
+
+class CurrencySerializer(serializers.ModelSerializer):
+    author = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = Currency
+        fields = '__all__'
+        read_only_fields = ('author', 'created_at', 'modified_at')
+
+
+class CountrySerializer(serializers.ModelSerializer):
+    author = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = Country
+        fields = ('name', 'tax_rate', 'created_at', 'modified_at', 'author')
         read_only_fields = ('author', 'created_at', 'modified_at')

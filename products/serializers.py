@@ -4,7 +4,8 @@
 from rest_framework import serializers
 
 # Models
-from products.models import Category, Product, ProductComment, ProductGallery, ProductReview, ProductVariation
+from products.models import (Category, Product, ProductComment, ProductGallery,
+                             ProductReview, ProductVariation, Collection)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -12,18 +13,19 @@ class CategorySerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
 
+    products_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ('name_en', 'description_en', 'name_es', 'description_es',
-                  'icon', 'picture', 'created_at', 'modified_at', 'author',)
+        fields = ('id', 'name_en', 'name_es', 'picture', 'created_at',
+                  'products_count', 'modified_at', 'author',)
         read_only_fields = ('author', 'created_at', 'modified_at')
+
+    def get_products_count(self, category):
+        return Product.objects.filter(category=category).count()
 
 
 class ProductGallerySerializer(serializers.ModelSerializer):
-    author = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-
     class Meta:
         model = ProductGallery
         fields = ('product_variation', 'picture')
@@ -50,8 +52,7 @@ class ProductReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductReview
-        fields = ('review', 'stars', 'product',
-                  'created_at', 'modified_at', 'author')
+        fields = '__all__'
         read_only_fields = ('author', 'created_at', 'modified_at')
 
 
@@ -62,17 +63,32 @@ class ProductCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductComment
-        fields = ('comment', 'comment_related', 'product',
-                  'reported', 'created_at', 'modified_at', 'author',)
+        fields = '__all__'
         read_only_fields = ('author', 'created_at', 'modified_at')
 
 
 class ProductVariationSerializer(serializers.ModelSerializer):
+    pictures = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductVariation
+        fields = ('product', 'stock', 'color', 'size', 'capabilities', 'main',
+                  'pictures', 'created_at', 'modified_at')
+        read_only_fields = ('author', 'created_at', 'modified_at')
+
+    def get_pictures(self, product_variation):
+        product_variation_pictures = ProductGallery.objects.filter(
+            product_variation=product_variation)
+
+        return [i.picture.url for i in product_variation_pictures]
+
+
+class CollectionSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
 
     class Meta:
-        model = ProductVariation
+        model = Collection
         fields = '__all__'
         read_only_fields = ('author', 'created_at', 'modified_at')
