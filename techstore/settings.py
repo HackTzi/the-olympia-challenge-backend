@@ -32,7 +32,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 LOCAL_APPS = [
-    'payments',
     'customers',
     'orders',
     'products',

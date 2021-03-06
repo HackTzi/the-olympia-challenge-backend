@@ -44,7 +44,7 @@ class CustomerViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
     @action(methods=['post', 'get'], detail=True)
     def notification(self, request, pk=None):
         if request.method == 'POST':
-            serializer = NotificationSerializer(request.data)
+            serializer = NotificationSerializer(request.data, context={'request', request})
             serializer.is_valid(raise_exception=True)
 
             serializer.create(serializer.validated_data)
