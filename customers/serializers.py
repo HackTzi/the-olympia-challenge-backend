@@ -30,7 +30,7 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShippingAddress
         fields = ('customer', 'country', 'address', 'city', 'state', 'zip_code',
-                  'created_at', 'modified_at', 'au<thor',)
+                  'created_at', 'modified_at', 'author',)
         read_only_fields = ('author', 'created_at', 'modified_at')
 
 

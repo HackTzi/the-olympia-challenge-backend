@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.response import Response
 
 # Models
-from orders.models import Order, ProductOrder, OrderTracking
+from orders.models import Order, ProductOrder, OrderTracking, Payment
 
 
 class ProductOrderSerializer(serializers.ModelSerializer):
@@ -31,7 +31,7 @@ class OrderSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
     products = ProductOrderSerializer(many=True)
-    tracking = serializers.SerializerMethodField
+    tracking = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
@@ -45,3 +45,14 @@ class OrderSerializer(serializers.ModelSerializer):
         serializer = OrderTrackingSerializer(order_tracking)
 
         return Response(serializer.data)
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    author = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = OrderTracking
+        fields = ('order', 'type', 'observations', 'author', 'created_at', 'modified_at')
+        read_only_fields = ('author', 'created_at', 'modified_at')

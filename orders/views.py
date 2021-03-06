@@ -1,20 +1,21 @@
 """Orders views."""
 
 # Django REST Framework
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, exceptions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 # Models
-from orders.models import Order
+from orders.models import Order, Payment
 
 # Serializers
-from orders.serializers import OrderSerializer, OrderTrackingSerializer
+from orders.serializers import OrderSerializer, OrderTrackingSerializer, PaymentSerializer
 
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
     # permission_classes = (permissions.IsAuthenticated,)
 
     @action(detail=True, methods=['post'])
@@ -33,4 +34,11 @@ class OrderViewSet(viewsets.ModelViewSet):
         if request.method == 'POST':
             pass
         elif request.method == 'GET':
-            pass
+            try:
+                payment = Payment.objects.get(pk=pk)
+            except Payment.DoesNotExist:
+                raise exceptions.NotFound(f'')
+
+            serializer = PaymentSerializer(payment)
+
+            return Response(serializer.data)

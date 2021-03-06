@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 class Currency(models.Model):
     """Currency Model"""
-    abbreviation = models.CharField(max_length=3)
+    abbreviation = models.CharField(max_length=3, unique=True)
     name = models.CharField(max_length=40)
     USD_equivalence = models.FloatField()
 
